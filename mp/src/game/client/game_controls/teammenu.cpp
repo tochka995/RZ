@@ -392,6 +392,20 @@ void CTeamMenu::SetLabelText(const char *textEntryName, const char *text)
 	}
 }
 
+
+
+void CTeamMenu::OnCommand( const char *command )
+{
+  if ( Q_stricmp( command, "vguicancel" ) )
+  {
+    engine->ClientCmd( const_cast<char *>( command ) );
+  }
+  Close();
+  gViewPortInterface->ShowBackGround( false );
+  BaseClass::OnCommand(command);
+}
+
+
 void CTeamMenu::OnKeyCodePressed(KeyCode code)
 {
 	int nDir = 0;

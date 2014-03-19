@@ -232,7 +232,31 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	}
 }
 
+
+
 void CHL2MP_Player::PickDefaultSpawnTeam( void )
+{
+    if ( GetTeamNumber() == 0 )
+    {
+        if ( HL2MPRules()->IsTeamplay() == false )
+        {
+            if ( GetModelPtr() == NULL )
+            {
+                ChangeTeam( TEAM_UNASSIGNED );
+            }
+        }
+        else
+        {
+            ChangeTeam( TEAM_SPECTATOR );
+        }
+    }
+}
+
+
+
+
+
+/*void CHL2MP_Player::PickDefaultSpawnTeam( void )
 {
 	if ( GetTeamNumber() == 0 )
 	{
@@ -281,6 +305,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		}
 	}
 }
+*/
 
 //-----------------------------------------------------------------------------
 // Purpose: Sets HL2 specific defaults.
