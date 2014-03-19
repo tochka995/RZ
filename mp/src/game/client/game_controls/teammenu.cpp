@@ -250,7 +250,7 @@ void CTeamMenu::LoadMapPage( const char *mapName )
 		}
 		else
 		{
-			m_pMapInfo->SetText( "123456" );
+			m_pMapInfo->SetText( "" );
 			return; 
 		}
 	}
@@ -392,30 +392,50 @@ void CTeamMenu::SetLabelText(const char *textEntryName, const char *text)
 	}
 }
 
-
-
-void CTeamMenu::OnCommand( const char *command )
-{
-  if ( Q_stricmp( command, "vguicancel" ) )
-  {
-    engine->ClientCmd( const_cast<char *>( command ) );
-  }
-  Close();
-  gViewPortInterface->ShowBackGround( false );
-  BaseClass::OnCommand(command);
-}
-
-
 void CTeamMenu::OnKeyCodePressed(KeyCode code)
 {
-	if( m_iJumpKey != BUTTON_CODE_INVALID && m_iJumpKey == code )
+	int nDir = 0;
+
+	switch ( code )
 	{
-		AutoAssign();
+	case KEY_XBUTTON_UP:
+	case KEY_XSTICK1_UP:
+	case KEY_XSTICK2_UP:
+	case KEY_UP:
+	case KEY_XBUTTON_LEFT:
+	case KEY_XSTICK1_LEFT:
+	case KEY_XSTICK2_LEFT:
+	case KEY_LEFT:
+		nDir = -1;
+		break;
+
+	case KEY_XBUTTON_DOWN:
+	case KEY_XSTICK1_DOWN:
+	case KEY_XSTICK2_DOWN:
+	case KEY_DOWN:
+	case KEY_XBUTTON_RIGHT:
+	case KEY_XSTICK1_RIGHT:
+	case KEY_XSTICK2_RIGHT:
+	case KEY_RIGHT:
+		nDir = 1;
+		break;
 	}
-	else if ( m_iScoreBoardKey != BUTTON_CODE_INVALID && m_iScoreBoardKey == code )
+
+	if ( m_iScoreBoardKey != BUTTON_CODE_INVALID && m_iScoreBoardKey == code )
 	{
 		gViewPortInterface->ShowPanel( PANEL_SCOREBOARD, true );
 		gViewPortInterface->PostMessageToPanel( PANEL_SCOREBOARD, new KeyValues( "PollHideCode", "code", code ) );
+	}
+	else if ( nDir != 0 )
+	{
+		CUtlSortVector< SortedPanel_t, CSortedPanelYLess > vecSortedButtons;
+		VguiPanelGetSortedChildButtonList( this, (void*)&vecSortedButtons, "&", 0 );
+
+		if ( VguiPanelNavigateSortedChildButtonList( (void*)&vecSortedButtons, nDir ) != -1 )
+		{
+			// Handled!
+			return;
+		}
 	}
 	else
 	{

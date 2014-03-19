@@ -371,8 +371,6 @@ void ClientModeShared::Init()
 
 void ClientModeShared::InitViewport()
 {
-	m_pViewport = new CBaseViewport();
-	m_pViewport->Start( gameuifuncs, gameeventmanager );
 }
 
 
