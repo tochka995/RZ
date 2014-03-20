@@ -43,6 +43,8 @@ LINK_ENTITY_TO_CLASS( info_player_combine, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_rebel, CPointEntity );
 
 IMPLEMENT_SERVERCLASS_ST(CHL2MP_Player, DT_HL2MP_Player)
+	SendPropInt( SENDINFO( m_iExp ) ),
+	SendPropInt( SENDINFO( m_iLevel ) ),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 0), 11, SPROP_CHANGES_OFTEN ),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 1), 11, SPROP_CHANGES_OFTEN ),
 	SendPropEHandle( SENDINFO( m_hRagdoll ) ),
@@ -99,7 +101,9 @@ const char *g_ppszRandomCombineModels[] =
 CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 {
 	m_angEyeAngles.Init();
-
+m_iExp = 0;
+m_iLevel = 1;
+LevelUp(); // sets default values
 	m_iLastWeaponFireUsercmd = 0;
 
 	m_flNextModelChangeTime = 0.0f;
@@ -118,6 +122,35 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 CHL2MP_Player::~CHL2MP_Player( void )
 {
 
+}
+
+
+const int XP_FOR_LEVELS[] = { 5, 12, 22, 35 };
+
+// We have gained XP; decide if we should level up, and do it if needed
+// Note: the XP limits here could be in an array, but that would be less clear
+void CHL2MP_Player::CheckLevel()
+{
+	int CurrentLevel = GetLevel();    //Find the player's level
+
+	if ( GetXP() >= XP_FOR_LEVELS[CurrentLevel - 1] ) //Check if the player's xp exceeds that which he needs to level up
+	{
+		m_iLevel ++; // actually increment player's level
+		LevelUp(); // and then adjust their settings (speed, health, damage) to reflect the change
+
+		ClientPrint( this, HUD_PRINTTALK, UTIL_VarArgs("You have reached level %i\n", GetLevel()) ); // write it on their screen
+		 
+		UTIL_ClientPrintAll( HUD_PRINTCONSOLE, UTIL_VarArgs("%s has reached level %i\n", GetPlayerName(), GetLevel()) ); // write it in everyone's console
+	}
+}
+
+void CHL2MP_Player::LevelUp()
+{
+	int CurrentLevel = GetLevel();
+
+	SetHealthMax(100 + ((CurrentLevel - 1) * 10));
+
+	m_iHealth = m_iMaxHealth = m_iHealthMax;
 }
 
 void CHL2MP_Player::UpdateOnRemove( void )
@@ -203,6 +236,8 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	CBasePlayer::GiveAmmo( 1,	"grenade" );
 	CBasePlayer::GiveAmmo( 6,	"Buckshot");
 	CBasePlayer::GiveAmmo( 6,	"357" );
+	CBasePlayer::GiveAmmo( 3,	"rpg_round" );
+	
 
 	if ( GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER )
 	{
@@ -212,7 +247,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	{
 		GiveNamedItem( "weapon_crowbar" );
 	}
-	
+	GiveNamedItem( "weapon_rpg" );
 	GiveNamedItem( "weapon_pistol" );
 	GiveNamedItem( "weapon_smg1" );
 	GiveNamedItem( "weapon_frag" );
@@ -349,6 +384,8 @@ void CHL2MP_Player::Spawn(void)
 		RemoveFlag( FL_FROZEN );
 	}
 
+	m_iHealth = m_iMaxHealth = m_iHealthMax;
+
 	m_iSpawnInterpCounter = (m_iSpawnInterpCounter + 1) % 8;
 
 	m_Local.m_bDucked = false;
@@ -356,6 +393,7 @@ void CHL2MP_Player::Spawn(void)
 	SetPlayerUnderwater(false);
 
 	m_bReady = false;
+	
 }
 
 void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )

@@ -52,6 +52,8 @@ public:
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 
+
+	
 	virtual void Precache( void );
 	virtual void Spawn( void );
 	virtual void PostThink( void );
@@ -90,7 +92,7 @@ public:
 	void CreateRagdollEntity( void );
 	void GiveAllItems( void );
 	void GiveDefaultItems( void );
-
+	void SetHealthMax(int h) { m_iHealthMax = h; }
 	void NoteWeaponFired( void );
 
 	void ResetAnimation( void );
@@ -137,12 +139,24 @@ public:
 
 	virtual bool	CanHearAndReadChatFrom( CBasePlayer *pPlayer );
 
+int GetXP() { return m_iExp; }
+void AddXP(int add=1) { m_iExp += add; CheckLevel(); }
+
+int GetLevel() { return m_iLevel; }
+void CheckLevel();
+void LevelUp();
+ 
+void ResetXP() { m_iExp = 0; m_iLevel = 1; LevelUp(); } // calling LevelUp will reset max health, etc
 		
 private:
 
 	CNetworkQAngle( m_angEyeAngles );
 	CPlayerAnimState   m_PlayerAnimState;
 
+	CNetworkVar(int, m_iExp);
+	CNetworkVar(int, m_iLevel);
+
+	int m_iHealthMax;
 	int m_iLastWeaponFireUsercmd;
 	int m_iModelType;
 	CNetworkVar( int, m_iSpawnInterpCounter );

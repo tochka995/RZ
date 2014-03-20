@@ -178,9 +178,9 @@ static const char *s_PreserveEnts[] =
 char *sTeamNames[] =
 {
 	"Unassigned",
-	"Spectator",
-	"Combine",
-	"Rebels",
+	"Spectators",
+	"Hunters",
+	"Zombies",
 };
 
 CHL2MPRules::CHL2MPRules()
@@ -286,6 +286,13 @@ void CHL2MPRules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &inf
 	if ( IsIntermission() )
 		return;
 	BaseClass::PlayerKilled( pVictim, info );
+	
+CBaseEntity *pInflictor = info.GetInflictor();
+CBaseEntity *pKiller = info.GetAttacker();
+CHL2MP_Player *pScorer = ToHL2MPPlayer( GetDeathScorer( pKiller, pInflictor ) );
+if ( pScorer && pKiller == pInflictor && pKiller != pVictim && PlayerRelationship( pKiller, pVictim ) == GR_NOTTEAMMATE )
+	pScorer->AddXP(1);
+
 #endif
 }
 

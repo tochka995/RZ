@@ -39,7 +39,8 @@ public:
 
 	QAngle GetAnimEyeAngles( void ) { return m_angEyeAngles; }
 	Vector GetAttackSpread( CBaseCombatWeapon *pWeapon, CBaseEntity *pTarget = NULL );
-
+	int GetXP() { return m_iExp; }
+	int GetLevel() { return m_iLevel; } 
 
 	// Should this object cast shadows?
 	virtual ShadowType_t		ShadowCastType( void );
@@ -112,6 +113,7 @@ private:
 	float m_flCurrentHeadYaw;
 	float m_flCurrentHeadPitch;
 
+	int m_iExp, m_iLevel;
 	int	  m_iIDEntIndex;
 
 	CountdownTimer m_blinkTimer;
