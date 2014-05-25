@@ -32,6 +32,7 @@
 #define PANEL_BUYPRESET_EDIT	"buypreset_edit"
 #define PANEL_INTRO			"intro"
 
+#define PANEL_RZ_PISTOLS	"rz_pisols"
 
 #define PANEL_COMMENTARY_MODELVIEWER	"commentary_modelviewer"
 

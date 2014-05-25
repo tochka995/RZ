@@ -72,6 +72,7 @@ void FinishClientPutInServer( CHL2MP_Player *pPlayer )
 	data->SetString( "msg",	"motd" );		// use this stringtable entry
 	data->SetBool( "unload", sv_motd_unload_on_dismissal.GetBool() );
 
+	//pPlayer->ShowViewPortPanel( PANEL_RZ_PISTOLS, true );
 	pPlayer->ShowViewPortPanel( PANEL_TEAM, true, data );
 	pPlayer->ShowViewPortPanel( PANEL_INFO, true, data );
 	
@@ -185,10 +186,10 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 
-#ifdef DEBUG
+
 	extern void Bot_RunAll();
 	Bot_RunAll();
-#endif
+
 }
 
 //=========================================================

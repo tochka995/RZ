@@ -396,13 +396,14 @@ void CTeamMenu::SetLabelText(const char *textEntryName, const char *text)
 
 void CTeamMenu::OnCommand( const char *command )
 {
-  if ( Q_stricmp( command, "vguicancel" ) )
-  {
-    engine->ClientCmd( const_cast<char *>( command ) );
-  }
-  Close();
-  gViewPortInterface->ShowBackGround( false );
-  BaseClass::OnCommand(command);
+	//gViewPortInterface->ShowPanel(PANEL_RZ_PISTOLS, true); //EBAT
+	if ( Q_stricmp( command, "vguicancel" ) )
+	{
+		engine->ClientCmd( const_cast<char *>( command ) );
+	}
+	Close();
+	gViewPortInterface->ShowBackGround( false );
+	BaseClass::OnCommand(command);
 }
 
 

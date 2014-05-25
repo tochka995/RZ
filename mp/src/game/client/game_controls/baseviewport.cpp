@@ -41,6 +41,7 @@
 #include "hud.h"
 #include "NavProgress.h"
 #include "commentary_modelviewer.h"
+#include "rz_panel_pistols.h"
 
 // our definition
 #include "baseviewport.h"
@@ -241,6 +242,7 @@ void CBaseViewport::CreateDefaultPanels( void )
 	 AddNewPanel( CreatePanelByName( PANEL_TEAM ), "PANEL_TEAM" );
 	// AddNewPanel( CreatePanelByName( PANEL_CLASS ), "PANEL_CLASS" );
 	// AddNewPanel( CreatePanelByName( PANEL_BUY ), "PANEL_BUY" );
+	 AddNewPanel( CreatePanelByName( PANEL_RZ_PISTOLS ), "PANEL_RZ_PISTOLS" );
 #endif
 }
 
@@ -293,6 +295,10 @@ IViewPortPanel* CBaseViewport::CreatePanelByName(const char *szPanelName)
 	else if ( Q_strcmp(PANEL_NAV_PROGRESS, szPanelName) == 0 )
 	{
 		newpanel = new CNavProgress( this );
+	}
+	else if ( Q_strcmp(PANEL_RZ_PISTOLS, szPanelName) == 0 )
+	{
+		newpanel = new CRZPistols( this );
 	}
 #endif	// TF_CLIENT_DLL
 #endif
@@ -373,6 +379,13 @@ void CBaseViewport::PostMessageToPanel( const char *pName, KeyValues *pKeyValues
 
 	PostMessageToPanel( panel, pKeyValues );
 }
+
+void CC_Show_RRP(void)
+{
+	gViewPortInterface->ShowPanel(PANEL_RZ_PISTOLS,true);
+}
+
+//ConCommand show_rz_pistols("show_rz_pistols", CC_Show_RRP);
 
 
 void CBaseViewport::ShowPanel( const char *pName, bool state )

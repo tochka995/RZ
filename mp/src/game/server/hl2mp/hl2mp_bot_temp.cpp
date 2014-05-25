@@ -21,7 +21,7 @@
 void ClientPutInServer( edict_t *pEdict, const char *playername );
 void Bot_Think( CHL2MP_Player *pBot );
 
-#ifdef DEBUG
+
 
 ConVar bot_forcefireweapon( "bot_forcefireweapon", "", 0, "Force bots with the specified weapon to fire." );
 ConVar bot_forceattack2( "bot_forceattack2", "0", 0, "When firing, use attack2." );
@@ -92,8 +92,10 @@ CBasePlayer *BotPutInServer( bool bFrozen, int iTeam )
 	// Allocate a CBasePlayer for the bot, and call spawn
 	//ClientPutInServer( pEdict, botname );
 	CHL2MP_Player *pPlayer = ((CHL2MP_Player *)CBaseEntity::Instance( pEdict ));
+	pPlayer->PrecacheModel("models/combine_soldier.mdl", true);
 	pPlayer->ClearFlags();
 	pPlayer->AddFlag( FL_CLIENT | FL_FAKECLIENT );
+	pPlayer->SetModel("models/combine_soldier.mdl");
 
 	if ( bFrozen )
 		pPlayer->AddEFlags( EFL_BOT_FROZEN );
@@ -431,5 +433,5 @@ void Bot_Think( CHL2MP_Player *pBot )
 
 
 
-#endif
+
 
