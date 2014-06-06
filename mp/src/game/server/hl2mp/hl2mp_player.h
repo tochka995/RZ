@@ -155,6 +155,8 @@ private:
 
 	CNetworkVar(int, m_iExp);
 	CNetworkVar(int, m_iLevel);
+	CNetworkVar(int, m_iMoney);
+
 
 	int m_iHealthMax;
 	int m_iLastWeaponFireUsercmd;
